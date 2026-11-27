@@ -1,0 +1,20 @@
+---
+import { getEntry, render } from 'astro:content';
+const events = await getEntry('pages', 'events');
+const activities = events?.data.highlights ?? [];
+const headings = events ? (await render(events)).headings : [];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+function destination(activity: typeof activities[number]) {
+  if (activity.url) return activity.url.startsWith('/') ? base + activity.url : activity.url;
+  const heading = headings.find(h => h.text === activity.title);
+  return base + '/events/' + (heading ? '#' + heading.slug : '');
+}
+---
+<section id="activity-roll">
+  <h2>歷年活動</h2>
+  <ul class="activity-wall">
+    {activities.map(activity => <li><a href={destination(activity)} title={activity.title}>
+      <img src={base + activity.photo} alt={activity.title} loading="lazy"/>
+    </a></li>)}
+  </ul>
+</section>
