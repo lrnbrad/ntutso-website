@@ -18,3 +18,9 @@
 .activity-wall a{display:grid;place-items:center;width:9rem;height:5.5rem}
 .activity-wall img{width:100%;height:100%;object-fit:contain}
 @media(min-width:620px){.teacher-grid,.month-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.featured-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem;margin:0 0 2.5rem}
+.featured-links a{display:flex;align-items:center;gap:1rem;padding:1rem;background:#eef0e6;border-bottom:2px solid #55755f;text-decoration:none}
+.featured-links a:hover strong,.featured-links a:focus-visible strong{text-decoration:underline}
+.featured-links img{width:4.75rem;height:5.75rem;object-fit:contain}
+.featured-links strong,.featured-links small{display:block}
+.featured-links strong{font-size:1.15rem}

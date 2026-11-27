@@ -1,6 +1,9 @@
 ---
 title: "申請專區"
 order: 0
+featured:
+  - {"title": "線上器材租借", "summary": "查看並填寫器材借用表單", "url": "/application/equipment-rental/"}
+  - {"title": "社員經費申請", "summary": "查看申請步驟與紙本表單", "url": "#經費申請單"}
 ---
 
 ## 租借器材申請

@@ -11,6 +11,7 @@ function collection(name: string) {
       })).optional(),
       months: z.array(z.object({ month: z.string(), items: z.array(z.string()) })).optional(),
       annualNote: z.string().optional(),
+      featured: z.array(z.object({ title: z.string(), summary: z.string().optional(), url: z.string(), photo: z.string().optional() })).optional(),
       highlights: z.array(z.object({ title: z.string(), photo: z.string(), url: z.string().optional() })).optional() }),
   });
 }

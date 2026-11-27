@@ -1,6 +1,9 @@
 ---
 title: "友社連結"
 order: 0
+featured:
+  - {"title": "賦展鋼琴社", "summary": "認識北科校內音樂社團", "url": "#賦展鋼琴社"}
+  - {"title": "北教大迴聲管樂", "summary": "探索校外友社", "url": "#ntue-echowind"}
 ---
 
 ## On-campus friendship

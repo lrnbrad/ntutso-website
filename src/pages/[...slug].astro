@@ -19,6 +19,15 @@ const nav = [['introduction','社團介紹'],['officer-members','歷屆幹部'],
 const home = entry.id === 'home';
 const group = entry.id === 'concerts' ? 'concerts' : entry.id === 'officer-members' ? 'officers' : undefined;
 const entries = group ? (await getCollection(group)).sort((a,b) => b.data.order-a.data.order || a.id.localeCompare(b.id)) : [];
+const directory = entry.collection === 'pages' && ['events','concerts','officer-members','application','links'].includes(entry.id);
+const years = new Map<string, typeof entries>();
+for (const item of entries) {
+  const year = item.data.title.match(/(\d{3,4})\s*學年/)?.[1];
+  const label = year ? year + ' 學年度' : '其他紀錄';
+  years.set(label, [...(years.get(label) ?? []), item]);
+}
+const contents = group ? [...years.keys()].map(label => ({text: label, slug: label.replace(' ', '-')}))
+  : headings.filter(h => h.depth === 2 && (entry.id !== 'links' || h.text.startsWith('校內友社') || h.text.startsWith('校外友社')));
 ---
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/><title>{entry.data.title}｜北科管弦 NTUTSO</title></head>
 <body><header><a class="brand" href={local('')}>NTUTSO <small>北科管弦</small></a><nav>{nav.map(([path,label])=><a href={local(path+'/')}>{label}</a>)}</nav></header>
@@ -43,7 +52,20 @@ const entries = group ? (await getCollection(group)).sort((a,b) => b.data.order-
     <ul>{month.items.map(item => <li>{item}</li>)}</ul></section>)}</div>
   {entry.data.annualNote && <p>{entry.data.annualNote}</p>}
 </section>}
-<ActivityWall/></article></div> : <article><Content /></article>}
-{group && <div class="cards">{entries.map(item=><a href={local(group+'/'+item.id+'/')}>{item.data.title} ↗</a>)}</div>}
-{entry.id==='application' && <a class="action" href={local('application/equipment-rental/')}>開啟器材租借專區 →</a>}
+<ActivityWall/></article></div> : directory ? <>
+{entry.data.featured?.length > 0 && <div class="featured-links">{entry.data.featured.map(item =>
+  <a href={item.url.startsWith('/') ? local(item.url) : item.url}>
+    {item.photo && <img src={local(item.photo)} alt=""/>}
+    <span><strong>{item.title}</strong><small>{item.summary}</small></span>
+  </a>)}</div>}
+<div class="intro-layout">
+  <aside><nav aria-label="本頁目錄"><strong>On This Page</strong>
+    {contents.map(h => <a href={'#'+h.slug}>{h.text}</a>)}
+  </nav></aside>
+  <article class="intro"><Content/>
+    {[...years].map(([label, items]) => <section id={label.replace(' ', '-')}><h2>{label}</h2>
+      <div class="cards">{items.map(item => <a href={local(group+'/'+item.id+'/')}>{item.data.title} ↗</a>)}</div>
+    </section>)}
+  </article>
+</div></> : <article><Content /></article>}
 </Main><footer>北科管弦 NTUTSO　·　<a href="https://sites.google.com/ntut.org.tw/orchestra-students/">團員專區</a>　·　<a href="https://m.me/NTUTOrchestra">聯絡樂團</a></footer></body></html>

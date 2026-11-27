@@ -71,3 +71,12 @@ content:
           - { name: month, label: 月份, type: string, required: true }
           - { name: items, label: 活動清單, type: string, list: true, required: true }
       - { name: annualNote, label: 年度活動備註, type: text }
+      - name: featured
+        label: 頁首精選連結
+        type: object
+        list: true
+        fields:
+          - { name: title, label: 標題, type: string, required: true }
+          - { name: summary, label: 簡介, type: string }
+          - { name: url, label: 目的網址或章節錨點, type: string, required: true }
+          - { name: photo, label: 圖片, type: image }

@@ -7,6 +7,9 @@ highlights:
   - {"title": "109學年度 迎新茶會", "photo": "/media/f1e1e43f592923.webp"}
   - {"title": "108學年度 校慶園遊會", "photo": "/media/24a681355bfd20.webp"}
   - {"title": "108學年度 迎新茶會", "photo": "/media/8fa05c584c7468.webp"}
+featured:
+  - {"title": "111 學年度迎新茶會", "summary": "團員相聚的開學活動", "url": "#111學年度-迎新茶會", "photo": "/media/d96f337247c9a4.webp"}
+  - {"title": "108 學年度校慶園遊會", "summary": "校慶活動回顧", "url": "#108學年度-校慶園遊會", "photo": "/media/24a681355bfd20.webp"}
 ---
 
 ## 111學年度 迎新茶會
