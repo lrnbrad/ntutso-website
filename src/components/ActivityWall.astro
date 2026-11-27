@@ -15,37 +15,36 @@ function destination(activity: typeof activities[number]) {
   <div class="wall-window">
     <div class="wall-track" style={`--duration:${Math.max(20,activities.length*4)}s`}>
       {[false,true].map(copy => <ul class="activity-wall" aria-hidden={copy || undefined}>
-        {activities.map(activity => <li><a href={destination(activity)} title={activity.title} tabindex={copy ? -1 : undefined}>
-          <img src={base + activity.photo} alt={activity.title}/>
+        {activities.map(activity => <li><a href={destination(activity)} tabindex={copy ? -1 : undefined}>
+          <img src={base + activity.photo} alt=""/>
+          <strong>{activity.title}</strong>
         </a></li>)}
       </ul>)}
     </div>
   </div>
-  <button class="wall-toggle" hidden type="button" aria-pressed="false">暫停自動捲動</button>
 </section>
-<script>
-  const button = document.querySelector<HTMLButtonElement>('.wall-toggle');
-  if (button) {
-    button.hidden = false;
-    button.addEventListener('click', () => {
-      const paused = button.closest('section')!.toggleAttribute('data-paused');
-      button.setAttribute('aria-pressed', String(paused));
-    });
-  }
-</script>
 <style>
   .wall-window { overflow: clip; }
   .wall-track { display: flex; width: max-content; animation: drift var(--duration) linear infinite; }
   .wall-track .activity-wall { flex-wrap: nowrap; margin: 0; padding-right: 2rem; }
-  .wall-window:hover .wall-track, [data-paused] .wall-track { animation-play-state: paused; }
+  .wall-window:hover .wall-track { animation-play-state: paused; }
   .wall-window:focus-within .wall-track { animation: none; width: auto; }
   .wall-window:focus-within .activity-wall { flex-wrap: wrap; }
   .wall-window:focus-within [aria-hidden] { display: none; }
-  .wall-toggle { font: inherit; color: inherit; background: transparent; border: 1px solid #93a093; border-radius: .3rem; padding: .25rem .75rem; cursor: pointer; }
+  .activity-wall a {
+    width: clamp(12rem, 23vw, 16rem);
+    height: auto;
+    gap: .65rem;
+    text-align: center;
+    text-decoration: none;
+  }
+  .activity-wall img { height: 6rem; }
+  .activity-wall strong { font-size: clamp(1.15rem, 2vw, 1.45rem); line-height: 1.4; }
+  .activity-wall a:is(:hover, :focus-visible) strong { text-decoration: underline; }
   @keyframes drift { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) {
     .wall-track { animation: none; width: auto; }
     .wall-track .activity-wall { flex-wrap: wrap; padding-right: 0; }
-    .activity-wall[aria-hidden], .wall-toggle { display: none; }
+    .activity-wall[aria-hidden] { display: none; }
   }
 </style>
