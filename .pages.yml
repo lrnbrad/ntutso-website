@@ -15,9 +15,34 @@ content:
     label: 歷屆幹部
     type: collection
     path: src/content/officers
-    fields: *fields
+    fields:
+      - { name: title, label: 學年度標題, type: string, required: true }
+      - { name: order, label: 學年度, type: number }
+      - name: members
+        label: 幹部與分部長
+        type: object
+        list: true
+        fields:
+          - { name: group, label: 分組, type: select, options: { values: [幹部, 分部長] }, required: true }
+          - { name: name, label: 姓名, type: string, required: true }
+          - { name: role, label: 職務或聲部, type: string, required: true }
+          - { name: detail, label: 樂器及班級, type: string }
+          - { name: photo, label: 照片, type: image, required: true }
+          - { name: url, label: 個人連結, type: string }
+      - { name: body, label: 備註, type: rich-text }
   - name: pages
     label: 網站頁面
     type: collection
     path: src/content/pages
-    fields: *fields
+    fields:
+      - { name: title, label: 標題, type: string, required: true }
+      - { name: order, label: 排序（較大優先）, type: number }
+      - { name: poster, label: 海報或封面, type: image }
+      - { name: body, label: 內文, type: rich-text }
+      - name: highlights
+        label: 歷年活動輪播（活動紀錄頁）
+        type: object
+        list: true
+        fields:
+          - { name: title, label: 活動標題（與內文章節相同）, type: string, required: true }
+          - { name: photo, label: 活動照片, type: image, required: true }

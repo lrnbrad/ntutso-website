@@ -1,5 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
+import Roster from '../components/Roster.astro';
+import ActivityRoll from '../components/ActivityRoll.astro';
 import Main from '../components/sections/Main.astro';
 import '../style.css';
 export async function getStaticPaths() {
@@ -10,7 +12,7 @@ export async function getStaticPaths() {
   }));
 }
 const {entry} = Astro.props;
-const {Content} = await render(entry);
+const {Content, headings} = await render(entry);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const local = (path: string) => base + '/' + path.replace(/^\//,'');
 const nav = [['introduction','社團介紹'],['officer-members','歷屆幹部'],['concerts','音樂會'],['events','活動紀錄'],['application','申請專區'],['links','友社連結']];
@@ -23,7 +25,10 @@ const entries = group ? (await getCollection(group)).sort((a,b) => b.data.order-
 <Main class="sheet"><div class="mast"><p>國立臺北科技大學管弦樂社</p><h1>{entry.data.title}</h1></div>
 {home && <div class="cards">{nav.slice(0,4).map(([path,label])=><a href={local(path+'/')}>{label} ↗</a>)}</div>}
 {entry.data.poster && <img src={local(entry.data.poster)} alt={entry.data.title+'海報'}/>}
-<article><Content /></article>
+{entry.collection === 'officers' && entry.data.members && <Roster members={entry.data.members}/>}
+{entry.id === 'introduction' ? <div class="intro-layout"><aside><nav aria-label="本頁目錄"><strong>On This Page</strong>
+{headings.filter(h=>h.depth===2).map(h=><a href={'#'+h.slug}>{h.text}</a>)}<a href="#activity-roll">歷年活動</a>
+</nav></aside><article class="intro"><Content/><ActivityRoll/></article></div> : <article><Content /></article>}
 {group && <div class="cards">{entries.map(item=><a href={local(group+'/'+item.id+'/')}>{item.data.title} ↗</a>)}</div>}
 {entry.id==='application' && <a class="action" href={local('application/equipment-rental/')}>開啟器材租借專區 →</a>}
 </Main><footer>北科管弦 NTUTSO　·　<a href="https://sites.google.com/ntut.org.tw/orchestra-students/">團員專區</a>　·　<a href="https://m.me/NTUTOrchestra">聯絡樂團</a></footer></body></html>

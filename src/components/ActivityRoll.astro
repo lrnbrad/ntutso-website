@@ -1,0 +1,42 @@
+---
+import { getEntry, render } from 'astro:content';
+const events = await getEntry('pages','events');
+const highlights = events?.data.highlights ?? [];
+const headings = events ? (await render(events)).headings : [];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+{highlights.length > 0 && <section id="activity-roll"><h2>歷年活動</h2>
+<activity-roll><div class="slides">{highlights.map(item => <a class="slide" href={base+'/events/#'+(headings.find(h=>h.text===item.title)?.slug ?? '')}>
+<img src={base+item.photo} alt={item.title+'活動影像'}/><span>{item.title}</span></a>)}</div>
+<div class="controls" hidden><button data-prev aria-label="上一個活動">←</button><button data-play>暫停輪播</button><button data-next aria-label="下一個活動">→</button></div>
+</activity-roll></section>}
+<script>
+class ActivityRoll extends HTMLElement {
+  connectedCallback() {
+    const slides = Array.from(this.querySelectorAll<HTMLElement>('.slide'));
+    if(slides.length < 2) return;
+    const controls = this.querySelector<HTMLElement>('.controls')!;
+    const play = controls.querySelector('button[data-play]')!;
+    let index = 0;
+    let playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer: ReturnType<typeof setTimeout>;
+    const show = (step = 0) => {
+      clearTimeout(timer);
+      index = (index + step + slides.length) % slides.length;
+      slides.forEach((slide,i) => slide.hidden = i !== index);
+      play.textContent = playing ? '暫停輪播' : '播放輪播';
+      if(playing && !document.hidden) timer = setTimeout(() => show(1), 6000);
+    };
+    const pause = () => { playing = false; show(); };
+    this.addEventListener('focusin', pause);
+    this.addEventListener('mouseenter', pause);
+    controls.querySelector('[data-prev]')!.addEventListener('click', () => show(-1));
+    controls.querySelector('[data-next]')!.addEventListener('click', () => show(1));
+    play.addEventListener('click', () => { playing = !playing; show(); });
+    document.addEventListener('visibilitychange', () => show());
+    controls.hidden = false;
+    show();
+  }
+}
+customElements.define('activity-roll', ActivityRoll);
+</script>

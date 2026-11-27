@@ -1,0 +1,9 @@
+---
+const { members } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+{['幹部','分部長'].map(group => <section class="roster"><h2>{group}</h2><div class="people-grid">
+{members.filter(person => person.group === group).map(person => <div class="person">
+<img loading="lazy" src={base + person.photo} alt={person.name} width="192" height="192"/>
+<h3>{person.url ? <a href={person.url}>{person.name}</a> : person.name}</h3>
+<p>{person.role}</p><small>{person.detail}</small></div>)}</div></section>)}
