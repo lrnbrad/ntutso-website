@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import Main from '../components/sections/Main.astro';
+import '../style.css';
+export async function getStaticPaths() {
+  const groups = await Promise.all([getCollection('pages'), getCollection('concerts'), getCollection('officers')]);
+  return groups.flat().map(entry => ({
+    params: { slug: entry.collection === 'pages' ? (entry.id === 'home' ? undefined : entry.id) : entry.collection + '/' + entry.id },
+    props: { entry },
+  }));
+}
+const {entry} = Astro.props;
+const {Content} = await render(entry);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const local = (path: string) => base + '/' + path.replace(/^\//,'');
+const nav = [['introduction','社團介紹'],['officer-members','歷屆幹部'],['concerts','音樂會'],['events','活動紀錄'],['application','申請專區'],['links','友社連結']];
+const home = entry.id === 'home';
+const group = entry.id === 'concerts' ? 'concerts' : entry.id === 'officer-members' ? 'officers' : undefined;
+const entries = group ? (await getCollection(group)).sort((a,b) => b.data.order-a.data.order || a.id.localeCompare(b.id)) : [];
+---
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/><title>{entry.data.title}｜北科管弦 NTUTSO</title></head>
+<body><header><a class="brand" href={local('')}>NTUTSO <small>北科管弦</small></a><nav>{nav.map(([path,label])=><a href={local(path+'/')}>{label}</a>)}</nav></header>
+<Main class="sheet"><div class="mast"><p>國立臺北科技大學管弦樂社</p><h1>{entry.data.title}</h1></div>
+{home && <div class="cards">{nav.slice(0,4).map(([path,label])=><a href={local(path+'/')}>{label} ↗</a>)}</div>}
+{entry.data.poster && <img src={local(entry.data.poster)} alt={entry.data.title+'海報'}/>}
+<article><Content /></article>
+{group && <div class="cards">{entries.map(item=><a href={local(group+'/'+item.id+'/')}>{item.data.title} ↗</a>)}</div>}
+{entry.id==='application' && <a class="action" href={local('application/equipment-rental/')}>開啟器材租借專區 →</a>}
+</Main><footer>北科管弦 NTUTSO　·　<a href="https://sites.google.com/ntut.org.tw/orchestra-students/">團員專區</a>　·　<a href="https://m.me/NTUTOrchestra">聯絡樂團</a></footer></body></html>

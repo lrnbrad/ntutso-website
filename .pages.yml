@@ -1,0 +1,23 @@
+media:
+  input: public/media
+  output: /media
+content:
+  - name: concerts
+    label: 音樂會
+    type: collection
+    path: src/content/concerts
+    fields: &fields
+      - { name: title, label: 標題, type: string, required: true }
+      - { name: order, label: 排序（較大優先）, type: number }
+      - { name: poster, label: 海報或封面, type: image }
+      - { name: body, label: 內文, type: rich-text }
+  - name: officers
+    label: 歷屆幹部
+    type: collection
+    path: src/content/officers
+    fields: *fields
+  - name: pages
+    label: 網站頁面
+    type: collection
+    path: src/content/pages
+    fields: *fields
